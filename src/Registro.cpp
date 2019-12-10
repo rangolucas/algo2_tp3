@@ -14,7 +14,7 @@ Registro::Registro(NombreCampo c, Valor v) {
     _campos.insert(c);
 }
 
-void Registro::DefinirCampo(NombreCampo c, Valor v){
+void Registro::DefinirCampo(NombreCampo c, const Valor v){
     _reg.insert(make_pair(c,v));
     _campos.insert(c);
 }
@@ -28,6 +28,10 @@ bool Registro::operator==(const Registro& r) const{
 }
 
 Valor Registro::operator[](const NombreCampo& campo) {
+    return _reg.at(campo);
+}
+
+Valor Registro::at(const NombreCampo& campo) const {
     return _reg.at(campo);
 }
 

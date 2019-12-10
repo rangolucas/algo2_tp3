@@ -20,7 +20,7 @@ void Driver::insertarRegistro(NombreTabla t, Registro& r) {
 Respuesta Driver::consultar(const Consulta& q) {
     vector<Registro> res;
     linear_set<Registro> cons = _base.EjecutarConsulta(q);
-    for(Registro cl : cons){//convierte el vector en set
+    for(const Registro& cl : cons){//convierte el vector en set
         res.push_back(cl);
     }
     return res;

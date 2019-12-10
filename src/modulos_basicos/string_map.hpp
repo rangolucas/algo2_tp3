@@ -128,9 +128,11 @@ template<typename T>
 bool string_map<T>::operator==(const string_map &r) const {
     if(this->_definidas != r._definidas) return false;
 
+    bool ret = true;
     for(auto def : this->_definidas) {
-        this->at(def) == r.at(def);
+        if(this->at(def) != r.at(def)) ret = false;
     }
+    return ret;
 }
 
 template<typename T>

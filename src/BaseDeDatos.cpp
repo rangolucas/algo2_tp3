@@ -82,28 +82,31 @@ linear_set<Registro> BaseDeDatos::PROJ(const Consulta& q, linear_set<NombreCampo
     linear_set<Registro> regs = EjecutarConsulta(q);
     for(const Registro& i: regs){
         linear_set<NombreCampo> camp = i.campos();
+        Registro nuevoReg = Registro();
         for(const NombreCampo& j: camp){
-            if(cs.find(j) != cs.end()){
-                res.insert(i);
+            if(cs.count(j)){
+                nuevoReg.DefinirCampo(j, i.at(j));
             }
         }
+        res.insert(nuevoReg);
     }
     return res;
 }
 
-linear_set<Registro> BaseDeDatos::RENAME(const Consulta& q, NombreCampo c1, NombreCampo c2){
+linear_set<Registro> BaseDeDatos::RENAME(const Consulta& q, NombreCampo campoViejo, NombreCampo campoNuevo){
     linear_set<Registro> res;
-    linear_set<Registro> regs = EjecutarConsulta(q);
-    for(Registro i: regs){
-        linear_set<NombreCampo> camp = i.campos();
-        for(NombreCampo j: camp){
-            if(c1==j){
-                res.insert(Registro(c2,i[j]));
-            }
-            else{
-                res.insert(i);
+    linear_set<Registro> registros = EjecutarConsulta(q);
+    for(Registro registro: registros){
+        Registro nuevoReg = Registro();
+        linear_set<NombreCampo> campos = registro.campos();
+        for(NombreCampo campo: campos){
+            if(campoViejo == campo){
+                nuevoReg.DefinirCampo(campoNuevo, registro[campo]);
+            } else {
+                nuevoReg.DefinirCampo(campo, registro[campo]);
             }
         }
+        res.insert(nuevoReg);
     }
     return res;
 }

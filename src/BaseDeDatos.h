@@ -25,7 +25,7 @@ public:
     linear_set<Registro> SELECT(const Consulta& q, NombreCampo c, Valor v);
     linear_set<Registro> MATCH(const Consulta& q, NombreCampo c1, NombreCampo c2);
     linear_set<Registro> PROJ(const Consulta& q, linear_set<NombreCampo> cs);
-    linear_set<Registro> RENAME(const Consulta& q, NombreCampo c1, NombreCampo c2);
+    linear_set<Registro> RENAME(const Consulta& q, NombreCampo campoViejo, NombreCampo campoNuevo);
     linear_set<Registro> INTER(const Consulta& q1, const Consulta& q2);
     linear_set<Registro> UNION(const Consulta& q1, const Consulta& q2);
     linear_set<Registro> PRODUCT(const Consulta& q1, const Consulta& q2);

@@ -18,6 +18,7 @@ public:
     void DefinirCampo(NombreCampo c, Valor v);
     bool operator==(const Registro& r) const;
     Valor operator[](const NombreCampo& campo);
+    Valor at(const NombreCampo& campo) const;
 private:
     string_map<Valor> _reg;
     linear_set<NombreCampo> _campos;
