@@ -49,6 +49,7 @@ void Driver::leerDataset(string dataset) {
         }
         Registro r;
         for (size_t i = 0; i < campos.size(); i++) {
+//            cout << "Se inserto: " << campos[i] << " - " << valores[i] << endl;
             Valor &v = valores[i];
             NombreCampo &c = campos[i];
             r.DefinirCampo(c, v);

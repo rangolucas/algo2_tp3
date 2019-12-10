@@ -55,26 +55,18 @@ linear_set<Registro> BaseDeDatos::FROM(NombreTabla n){
     return registros;
 }
 
-linear_set<Registro> BaseDeDatos::SELECT(Consulta q, NombreCampo c, Valor v){
-    Table t= _tablas.at(q.nombre_tabla());
-    if(c==_clave.at(q.nombre_tabla())){
-        linear_set<Registro> res;
-        res.insert(_registroPorValor.at(q.nombre_tabla()).at(c).at(v));
-        return res;
-    }
-    else{
-        linear_set<Registro> res;
-        linear_set<Registro> rgs = EjecutarConsulta(q);
-        for(Registro i :rgs){
-            if(i[c]==v){
-                res.insert(i);
-            }
+linear_set<Registro> BaseDeDatos::SELECT(const Consulta& q, NombreCampo c, Valor v){
+    linear_set<Registro> res;
+    linear_set<Registro> rgs = EjecutarConsulta(q);
+    for(Registro i :rgs){
+        if(i[c]==v){
+            res.insert(i);
         }
-        return res;
     }
+    return res;
 }
 
-linear_set<Registro> BaseDeDatos::MATCH(Consulta q, NombreCampo c1, NombreCampo c2){
+linear_set<Registro> BaseDeDatos::MATCH(const Consulta& q, NombreCampo c1, NombreCampo c2){
     linear_set<Registro> res;
     linear_set<Registro> rs = EjecutarConsulta(q);
     for(Registro i: rs){
@@ -85,13 +77,12 @@ linear_set<Registro> BaseDeDatos::MATCH(Consulta q, NombreCampo c1, NombreCampo 
     return res;
 }
 
-linear_set<Registro> BaseDeDatos::PROJ(Consulta q, linear_set<NombreCampo> cs){
+linear_set<Registro> BaseDeDatos::PROJ(const Consulta& q, linear_set<NombreCampo> cs){
     linear_set<Registro> res;
     linear_set<Registro> regs = EjecutarConsulta(q);
-    Table t = _tablas.at(q.nombre_tabla());
-    for(Registro i: regs){
-        linear_set<NombreCampo> camp = t.campos();
-        for(NombreCampo j: camp){
+    for(const Registro& i: regs){
+        linear_set<NombreCampo> camp = i.campos();
+        for(const NombreCampo& j: camp){
             if(cs.find(j) != cs.end()){
                 res.insert(i);
             }
@@ -100,12 +91,11 @@ linear_set<Registro> BaseDeDatos::PROJ(Consulta q, linear_set<NombreCampo> cs){
     return res;
 }
 
-linear_set<Registro> BaseDeDatos::RENAME(Consulta q, NombreCampo c1, NombreCampo c2){
+linear_set<Registro> BaseDeDatos::RENAME(const Consulta& q, NombreCampo c1, NombreCampo c2){
     linear_set<Registro> res;
     linear_set<Registro> regs = EjecutarConsulta(q);
-    Table t = _tablas.at(q.nombre_tabla());
     for(Registro i: regs){
-        linear_set<NombreCampo> camp = t.campos();
+        linear_set<NombreCampo> camp = i.campos();
         for(NombreCampo j: camp){
             if(c1==j){
                 res.insert(Registro(c2,i[j]));
@@ -118,7 +108,7 @@ linear_set<Registro> BaseDeDatos::RENAME(Consulta q, NombreCampo c1, NombreCampo
     return res;
 }
 
-linear_set<Registro> BaseDeDatos::INTER(Consulta q1, Consulta q2) {
+linear_set<Registro> BaseDeDatos::INTER(const Consulta& q1, const Consulta& q2) {
     linear_set<Registro> res;
     linear_set<Registro> regsC1 = EjecutarConsulta(q1);
     linear_set<Registro> regsC2 = EjecutarConsulta(q2);
@@ -131,7 +121,7 @@ linear_set<Registro> BaseDeDatos::INTER(Consulta q1, Consulta q2) {
     return res;
 }
 
-linear_set<Registro> BaseDeDatos::UNION(Consulta q1, Consulta q2){
+linear_set<Registro> BaseDeDatos::UNION(const Consulta& q1, const Consulta& q2){
     linear_set<Registro> res = EjecutarConsulta(q1);
     linear_set<Registro> regsC2 = EjecutarConsulta(q2);
     for(Registro i: regsC2){
@@ -140,7 +130,7 @@ linear_set<Registro> BaseDeDatos::UNION(Consulta q1, Consulta q2){
     return res;
 }
 
-linear_set<Registro> BaseDeDatos::PRODUCT(Consulta q1, Consulta q2){
+linear_set<Registro> BaseDeDatos::PRODUCT(const Consulta& q1, const Consulta& q2){
     linear_set<Registro> res;
     linear_set<Registro> regsC1 = EjecutarConsulta(q1);
     linear_set<Registro> regsC2 = EjecutarConsulta(q2);
@@ -195,7 +185,7 @@ linear_set<Registro> BaseDeDatos::JOIN(NombreTabla t1, NombreTabla t2){
     return res;
 }
 
-linear_set<Registro> BaseDeDatos::EjecutarConsulta(const Consulta q){
+linear_set<Registro> BaseDeDatos::EjecutarConsulta(const Consulta& q){
     linear_set<Registro> res;
     TipoConsulta i=q.tipo_consulta();
     switch (i){

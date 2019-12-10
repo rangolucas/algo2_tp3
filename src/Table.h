@@ -25,7 +25,7 @@ private:
     linear_set<NombreCampo> _campos;
     linear_set<Registro> _registros;
     NombreCampo _campoClave;
-    string_map<Registro> _claves;
+    string_map<Registro> _registrosPorClave;
 };
 
 //#include "Table.cpp"
