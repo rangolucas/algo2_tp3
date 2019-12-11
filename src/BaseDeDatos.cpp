@@ -7,11 +7,12 @@ BaseDeDatos::BaseDeDatos(NombreTabla n, Table t){
     _campos.insert(make_pair(n,t.campos()));
     _clave.insert(make_pair(n,t.campoClave()));
     _registrosTabla.insert(make_pair(n,t.registros()));
+    string_map<Registro> registrosXClave;
+    registrosXClave = t.clavesARegistros();
     string_map<string_map<Registro>> nombre_campo;
-    nombre_campo.insert(make_pair(t.campoClave(),t.clavesARegistros()));
+    nombre_campo.insert(make_pair(t.campoClave(),registrosXClave));
     string_map<string_map<string_map<Registro>>> nombre_tabla;
     nombre_tabla.insert(make_pair(n,nombre_campo));
-
     _registroPorValor =nombre_tabla;
 }
 
@@ -20,13 +21,16 @@ void BaseDeDatos::AgregarTabla(NombreTabla n, Table& t){
     _registrosTabla.insert(make_pair(n,linear_set<Registro>()));
     _campos.insert(make_pair(n,t.campos()));
     _clave.insert(make_pair(n,t.campoClave()));
-    string_map<string_map<Registro>> res;
-//    for(linear_set<NombreCampo>::iterator it= t.campos().begin(); it!=t.campos().end(); ++it){
+    string_map<Registro> fst;
+    fst=t.clavesARegistros();
+    string_map<string_map<Registro>> scd;
+    scd.insert(make_pair(t.campoClave(),fst));
+/*    for(linear_set<NombreCampo>::iterator it= t.campos().begin(); it!=t.campos().end(); ++it){
     for(NombreCampo campo : t.campos()) {
         string_map<Registro> r;
         res.insert(make_pair(campo, r));
-    }
-    _registroPorValor.insert(make_pair(n,res));
+    }*/
+    _registroPorValor.insert(make_pair(n,scd));
 }
 
 void BaseDeDatos::EliminarTabla(NombreTabla n){
@@ -38,9 +42,10 @@ void BaseDeDatos::AgregarRegistro(NombreTabla n, Registro& r){
     Table t = _tablas.at(n);
     _registrosTabla.at(n).insert(r);
     _tablas.at(n).agregarRegistro(r);
-    auto map = _registroPorValor.at(n);
+    _registroPorValor.at(n).at(t.campoClave()).insert(make_pair(r[t.campoClave()],r));
+    /*auto map = _registroPorValor.at(n);
     const Valor &valor = r[t.campoClave()];
-    map.at(t.campoClave()).insert(make_pair(valor, r));
+    map.at(t.campoClave()).insert(make_pair(valor, r));*/
 }
 
 void BaseDeDatos::EliminarRegistro(NombreTabla n, Registro r){
@@ -58,6 +63,19 @@ linear_set<Registro> BaseDeDatos::FROM(NombreTabla n){
 linear_set<Registro> BaseDeDatos::SELECT(const Consulta& q, NombreCampo c, Valor v){
     linear_set<Registro> res;
     linear_set<Registro> rgs = EjecutarConsulta(q);
+    if(q.tipo_consulta()==TipoConsulta::FROM){
+        if(c == getterTabla(q.nombre_tabla()).campoClave()){
+            string_map<string_map<Registro>> fst;
+            fst=_registroPorValor.at(q.nombre_tabla());
+            string_map<Registro> scn;
+            scn= fst.at(c);
+            Registro trd;
+            trd= scn.at(v);
+            res.insert(trd);
+            res.insert(_registroPorValor.at(q.nombre_tabla()).at(c).at(v));
+            return res;
+        }
+    }
     for(Registro i :rgs){
         if(i[c]==v){
             res.insert(i);
@@ -221,6 +239,11 @@ linear_set<Registro> BaseDeDatos::EjecutarConsulta(const Consulta& q){
     }
     return res;
 }
+
+Table BaseDeDatos::getterTabla(NombreTabla t){
+    return _tablas.at(t);
+}
+
 /*
 linear_set<Registro> BaseDeDatos::FiltrarPorValor(linear_set<Registro> rgs, NombreCampo c, Valor v){
 

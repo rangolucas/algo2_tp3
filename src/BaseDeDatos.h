@@ -31,6 +31,7 @@ public:
     linear_set<Registro> PRODUCT(const Consulta& q1, const Consulta& q2);
     linear_set<Registro> JOIN(NombreTabla t1, NombreTabla t2);
     linear_set<Registro> EjecutarConsulta(const Consulta& q);
+    Table getterTabla(NombreTabla t);
    /* set<Registro> FiltrarPorValor(set<Registro> rgs, NombreCampo c, Valor v);
     set<Registro> FiltrarPorCoincidenciaDeCampos(set<Registro> rgs, NombreCampo c1, NombreCampo c2);
     set<Registro> RenombrarCampo(set<Registro> rgs, NombreCampo c1, NombreCampo c2);
