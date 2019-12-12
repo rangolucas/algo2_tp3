@@ -17,6 +17,10 @@ void Driver::insertarRegistro(NombreTabla t, Registro& r) {
     _base.AgregarRegistro(t,r);
 }
 
+void Driver::eliminarRegistro(NombreTabla t, Registro& r) {
+    _base.EliminarRegistro(t,r);
+}
+
 Respuesta Driver::consultar(const Consulta& q) {
     vector<Registro> res;
     linear_set<Registro> cons = _base.EjecutarConsulta(q);

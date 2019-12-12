@@ -14,7 +14,7 @@ Registro::Registro(NombreCampo c, Valor v) {
     _campos.insert(c);
 }
 
-void Registro::DefinirCampo(NombreCampo c, const Valor v){
+void Registro::DefinirCampo(NombreCampo c, const Valor& v) {
     _reg.insert(make_pair(c,v));
     _campos.insert(c);
 }

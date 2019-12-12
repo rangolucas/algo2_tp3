@@ -15,7 +15,7 @@ public:
     Registro(const Registro& aCopiar);
     Registro(NombreCampo c, Valor v);
     linear_set<NombreCampo> campos() const;
-    void DefinirCampo(NombreCampo c, Valor v);
+    void DefinirCampo(NombreCampo c, const Valor& v);
     bool operator==(const Registro& r) const;
     Valor operator[](const NombreCampo& campo);
     Valor at(const NombreCampo& campo) const;

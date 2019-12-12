@@ -2,6 +2,37 @@
 #include "../src/Driver.h"
 #include "../src/modulos_basicos/linear_set.h"
 
+TEST(custom_test, test_eliminar_registro) {
+    Driver d;
+    d.leerDataset("personas");
+    Respuesta r = d.consultar(Consulta("from(personas)"));
+    ASSERT_EQ(r.size(), (size_t)3);
+    d.eliminarRegistro("personas", r[0]);
+    Respuesta r2 = d.consultar(Consulta("from(personas)"));
+    ASSERT_EQ(r2.size(), (size_t)2);
+}
+
+TEST(cache, test_cache_sin_modificar_tabla) {
+    Driver d;
+    d.leerDataset("personas");
+    Respuesta r = d.consultar(Consulta("from(personas)"));
+    Respuesta r2 = d.consultar(Consulta("from(personas)"));
+    ASSERT_EQ(r, r2);
+}
+
+TEST(cache, test_cache_modificando_tabla) {
+    Driver d;
+    d.leerDataset("personas");
+    Respuesta r = d.consultar(Consulta("from(personas)"));
+    Registro nuevoRegistro = Registro();
+    nuevoRegistro.DefinirCampo("cuit", "111");
+    nuevoRegistro.DefinirCampo("nombre", "jua'");
+    nuevoRegistro.DefinirCampo("apellido", "perez");
+    d.insertarRegistro("personas", nuevoRegistro);
+    Respuesta r2 = d.consultar(Consulta("from(personas)"));
+    ASSERT_NE(r, r2);
+}
+
 set<string> proj1(const Respuesta& r, NombreCampo c) {
     set<string> s;
     for (Registro reg : r) {

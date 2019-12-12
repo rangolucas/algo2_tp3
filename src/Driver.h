@@ -17,6 +17,7 @@ public:
     // implementación de la base de datos.
     void crearTabla(NombreTabla tabla, vector<NombreCampo> campos, NombreCampo clave);
     void insertarRegistro(NombreTabla t, Registro& r);
+    void eliminarRegistro(NombreTabla t, Registro& r);
     Respuesta consultar(const Consulta& q);
 
     // El método leerDataset está provisto por la cátedra.
